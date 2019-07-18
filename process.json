@@ -1,0 +1,8 @@
+{
+  "apps": [{
+    "name": "interest-server",
+    "cwd": ".",
+    "script": "npm",
+    "args": "start"
+  }]
+}
