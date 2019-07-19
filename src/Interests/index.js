@@ -30,7 +30,10 @@ router.get('/', function getInerests(req, res) {
           audience_size,
           id,
           name,
-          topic
+          topic,
+          selected: false,
+          fbLink: `https://www.facebook.com/search/top/?q=${query}`,
+          googleLink: `https://www.google.com/search?q=${query}`
         };
       }));
     })
