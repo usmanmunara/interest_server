@@ -10,7 +10,6 @@ const validator = require('validator');
 
 const sequelize = require('../model');
 const userModel = sequelize.model(config.modelNames.userModel);
-// const fbmarketing = require('./fbmarketing');
 
 // {  username: 'usmanmunara',
 // organization: 'edvant',
@@ -20,9 +19,9 @@ const userModel = sequelize.model(config.modelNames.userModel);
 // fullName: 'Muhammmad Usman Farooq',
 // }
 // register a user
-// router.all(fbmarketing());
 router.post('/', function createUser(req, res) {
-  const { username, organization, email, type, password, fullName } = req.body;
+  console.log(req.body);
+  const { username, organization, email, password, fullName } = req.body;
   // field completeness check
   if (!username || !email || !password || !fullName) {
     res.sendStatus(400);
@@ -47,7 +46,6 @@ router.post('/', function createUser(req, res) {
         username,
         email,
         organization,
-        type,
         salt: salt.toString('base64'),
         password: hash.toString('base64'),
         props: {
@@ -65,7 +63,6 @@ router.post('/', function createUser(req, res) {
             .then(newUser => {
               user.id = newUser.id; // why add user.id to newUser.id?
               return jwt.signHashToken({
-                type: config.userTokenTypes.newAccount,
                 id: user.id
               });
             });
@@ -283,15 +280,14 @@ router.post('/auth', function authUser(req, res) {
             username: user.username,
             organization: user.organization,
             email: user.email,
-            type: user.type,
             // expiryDate: user.expiryDate,
             props: user.props
           });
         })
         .then(token => {
-          res.cookie(config.tokenCookieName, token, config.cookieOptions); // we will have to change this to loal storage right?
+          res.cookie(config.tokenCookieName, token, config.cookieOptions);
           res.send({
-            token: token // not send all the obj?
+            token: token
           });
         });
     })
@@ -307,7 +303,9 @@ router.post('/auth', function authUser(req, res) {
 
 // sign out
 router.all('/logout', function logoutUser(req, res) {
-  res.clearCookie(config.tokenCookieName); // this all changed
+  res.clearCookie(config.tokenCookieName);
+  res.send('Logout Successfull');
+  return; // this all changed
 });
 
 module.exports = router;

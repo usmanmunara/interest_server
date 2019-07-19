@@ -11,13 +11,13 @@ module.exports = function(sequelize, modelName) {
     username: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: 'Username'
+      unique: true
     },
     organization: {
       type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: 'Username',
-      defaultValue: ''
+      allowNull: true,
+      // unique: 'Username',
+      // defaultValue: ''
     },
     email: {
       type: DataTypes.STRING(255),
@@ -34,7 +34,7 @@ module.exports = function(sequelize, modelName) {
     },
     expiryDate: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
       defaultValue: '9999-12-31 23:59:59'
     },
     props: {

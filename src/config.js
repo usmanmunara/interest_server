@@ -19,6 +19,7 @@ module.exports = {
   modelNames: {
     userModel: 'User'
   },
+
   fbApiToken: process.env.FB_API_TOKEN,
 
   mysql: {

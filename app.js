@@ -2,6 +2,7 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const UserRoute = require('./src/User');
+const InterestRoute = require('./src/Interests');
 
 // const helmet = require('helmet');
 
@@ -22,13 +23,14 @@ if (app.get('env') != 'development') {
 }
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true,
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
 
 app.use('/api/v1/user', UserRoute);
-
-
+app.use('/api/v1/interests', InterestRoute);
 
 // // Testing our database configuration:
 // require('./src/model');
@@ -47,7 +49,7 @@ if (app.get('env') === 'development') {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
-      error: err,
+      error: err
     });
   });
 }
@@ -58,9 +60,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: {},
+    error: {}
   });
 });
-
 
 module.exports = app;
