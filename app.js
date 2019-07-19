@@ -1,14 +1,19 @@
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const UserRoute = require('./src/User');
 const InterestRoute = require('./src/Interests');
 
 // const helmet = require('helmet');
 
 const path = require('path');
-
 const app = express();
+
+const corsOptions = {
+  origin: true,
+  credentials: true
+};
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,6 +27,10 @@ if (app.get('env') != 'development') {
   app.use(logger('dev'));
 }
 
+if (app.get('env') === 'development') {
+  app.use('/api', cors(corsOptions));
+}
+
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -31,9 +40,6 @@ app.use(
 
 app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/interests', InterestRoute);
-
-// // Testing our database configuration:
-// require('./src/model');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

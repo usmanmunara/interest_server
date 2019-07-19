@@ -8,7 +8,7 @@ const config = require('../config');
 
 router.get('/', function getInerests(req, res) {
   const FB_API_TOKEN = config.fbApiToken;
-  console.log(FB_API_TOKEN);
+  // console.log(FB_API_TOKEN);
   let query = req.query.search || 'golf';
   query = query[0].toUpperCase() + query.slice(1).toLowerCase();
   const AD_INTEREST_URL = `https://graph.facebook.com/search?type=adinterest&q=[${query}]&limit=10000&locale=en_US&access_token=${FB_API_TOKEN}`;
