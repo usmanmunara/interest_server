@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const UserRoute = require('./src/User');
 const InterestRoute = require('./src/Interests');
+const DemoRoute = require('./src/Interests/demo');
 
 // const helmet = require('helmet');
 
@@ -40,6 +41,7 @@ app.use(
 
 app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/interests', InterestRoute);
+app.use('/api/v1/interests', DemoRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
