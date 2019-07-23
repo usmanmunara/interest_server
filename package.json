@@ -19,12 +19,14 @@
     "googleapis": "^39.2.0",
     "helmet": "^3.16.0",
     "jsonwebtoken": "^8.5.1",
+    "mailgun-js": "^0.22.0",
     "moment": "^2.24.0",
     "morgan": "^1.7.0",
     "mysql2": "^1.6.5",
     "nodemailer": "^5.1.1",
     "nodemon": "^1.19.1",
     "sequelize": "^6.0.0",
+    "stripe": "^7.4.0",
     "validator": "^10.11.0"
   },
   "devDependencies": {

@@ -16,7 +16,7 @@ fullName: 'Muhammmad Usman Farooq',
 
 ```
 
-## '/user/auth' POST
+## '/auth' POST
 
 After creating a new user or when login
 

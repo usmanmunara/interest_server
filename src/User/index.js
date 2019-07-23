@@ -11,7 +11,7 @@ const validator = require('validator');
 const sequelize = require('../model');
 const userModel = sequelize.model(config.modelNames.userModel);
 
-// {  username: 'usmanmunara',
+// {
 // organization: 'edvant',
 // email: 'usman@edvant.net',
 // type: 'admin',
@@ -21,9 +21,9 @@ const userModel = sequelize.model(config.modelNames.userModel);
 // register a user
 router.post('/', function createUser(req, res) {
   console.log(req.body);
-  const { username, organization, email, password, fullName } = req.body;
+  const { organization, email, password, fullName } = req.body;
   // field completeness check
-  if (!username || !email || !password || !fullName) {
+  if (!email || !password || !fullName) {
     res.sendStatus(400);
     return;
   }
@@ -43,7 +43,6 @@ router.post('/', function createUser(req, res) {
   hashPassword(password)
     .then(({ hash, salt }) => {
       const user = {
-        username,
         email,
         organization,
         salt: salt.toString('base64'),
@@ -248,18 +247,18 @@ router.post(
 
 // authenticate user
 router.post('/auth', function authUser(req, res) {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   // field completeness check
-  if (!username || !password) {
-    res.sendStatus(400);
+  if (!email || !password) {
+    res.send('Please complete all the fields').sendStatus(400);
     return;
   }
 
   userModel
     .findOne({
       where: {
-        username: username
+        email: email
       }
     })
     .then(user => {
@@ -277,7 +276,6 @@ router.post('/auth', function authUser(req, res) {
           // issue JSON web token as response
           return jwt.signToken({
             id: user.id,
-            username: user.username,
             organization: user.organization,
             email: user.email,
             // expiryDate: user.expiryDate,
@@ -296,7 +294,7 @@ router.post('/auth', function authUser(req, res) {
         res.sendStatus(403);
       } else {
         console.error('Error authenticating user: ', err);
-        res.sendStatus(500);
+        res.send(err).sendStatus(500);
       }
     });
 });

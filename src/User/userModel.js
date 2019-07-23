@@ -15,7 +15,7 @@ module.exports = function(sequelize, modelName) {
     },
     organization: {
       type: DataTypes.STRING(255),
-      allowNull: true,
+      allowNull: true
       // unique: 'Username',
       // defaultValue: ''
     },
@@ -32,10 +32,10 @@ module.exports = function(sequelize, modelName) {
       type: DataTypes.STRING(100),
       allowNull: false
     },
-    expiryDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: '9999-12-31 23:59:59'
+    paymentStatus: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
     props: {
       type: DataTypes.JSON,

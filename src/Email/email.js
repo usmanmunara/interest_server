@@ -1,6 +1,6 @@
 
-const apiKey = 'a02e958f461580360d508e59075e4db5-16ffd509-8889e58f';
 const mailgun = require("mailgun-js");
+const apiKey = 'a02e958f461580360d508e59075e4db5-16ffd509-8889e58f';
 const DOMAIN = 'fbpanda.lswong.com';
 const mg = mailgun({apiKey: apiKey, domain: DOMAIN});
 const data = {
