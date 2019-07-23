@@ -9,6 +9,7 @@ const hashPassword = require('./hashPBKDF2');
 const validator = require('validator');
 
 const sequelize = require('../model');
+const Sequelize = require('sequelize');
 const userModel = sequelize.model(config.modelNames.userModel);
 
 // {
@@ -20,23 +21,25 @@ const userModel = sequelize.model(config.modelNames.userModel);
 // }
 // register a user
 router.post('/', function createUser(req, res) {
-  console.log(req.body);
-  const { organization, email, password, fullName } = req.body;
+  // console.log(req.body);
+  const { email, password, fullName } = req.body;
   // field completeness check
   if (!email || !password || !fullName) {
-    res.sendStatus(400);
+    res.status(400).send('Missing fields.');
     return;
   }
 
   // password verification
   if (password.length < 6) {
-    res.sendStatus(400);
+    res
+      .status(400)
+      .send('Password Length should be greater than or equal to 6');
     return;
   }
 
   // email format and domain verification
   if (!validator.isEmail(email)) {
-    res.sendStatus(400);
+    res.status(400).send('invalid email');
     return;
   }
 
@@ -44,7 +47,6 @@ router.post('/', function createUser(req, res) {
     .then(({ hash, salt }) => {
       const user = {
         email,
-        organization,
         salt: salt.toString('base64'),
         password: hash.toString('base64'),
         props: {
@@ -52,7 +54,7 @@ router.post('/', function createUser(req, res) {
         }
       };
 
-      sequelize
+      userModel.sequelize
         .transaction(t => {
           // create user in own database
           return userModel
@@ -72,8 +74,9 @@ router.post('/', function createUser(req, res) {
           });
         })
         .catch(function createUserError(err) {
-          if (err instanceof sequelize.UniqueConstraintError) {
-            res.sendStatus(409);
+          console.error(err);
+          if (err instanceof Sequelize.UniqueConstraintError) {
+            res.status(409).send(err.errors[0].message);
             return;
           }
           throw err;
@@ -116,6 +119,8 @@ router.patch('/', jwt.verifyTokenMiddleware(true), function updateUser(
     return;
   }
 
+  // console.log(req.user);
+
   userModel
     .findByPk(req.user.id)
     .then(user => {
@@ -134,6 +139,9 @@ router.patch('/', jwt.verifyTokenMiddleware(true), function updateUser(
       });
       user.changed('updatedAt', true);
       return user.save();
+    })
+    .then(user => {
+      res.send({ ...user, message: 'User Updated' });
     })
     .catch(function updateUserError(err) {
       if (err.message === 'User not found') {
@@ -184,7 +192,7 @@ router.post(
     userModel
       .findOne({
         where: {
-          username: req.user.username
+          email: req.user.email
         }
       })
       .then(user => {
@@ -251,7 +259,7 @@ router.post('/auth', function authUser(req, res) {
 
   // field completeness check
   if (!email || !password) {
-    res.send('Please complete all the fields').sendStatus(400);
+    res.status(400).send('Please complete all the fields');
     return;
   }
 
@@ -294,7 +302,7 @@ router.post('/auth', function authUser(req, res) {
         res.sendStatus(403);
       } else {
         console.error('Error authenticating user: ', err);
-        res.send(err).sendStatus(500);
+        res.status(500).send(err);
       }
     });
 });

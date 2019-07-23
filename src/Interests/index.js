@@ -1,10 +1,18 @@
 const axios = require('axios');
 const router = require('express').Router();
 
-// const jwt = require('../Token');
+const jwt = require('../Token');
+
 const config = require('../config');
 
-router.get('/user', function getInerests(req, res) {
+router.get('/user', jwt.verifyTokenMiddleware(true), function getInerests(
+  req,
+  res
+) {
+  if (!req.user.paymentStatus) {
+    res.status(401).send('Unpaid user');
+    return;
+  }
   const FB_API_TOKEN = config.fbApiToken;
   let query = req.query.search || 'golf';
   query = query[0].toUpperCase() + query.slice(1).toLowerCase();
@@ -38,7 +46,7 @@ router.get('/user', function getInerests(req, res) {
     })
     .then(data => {
       const interestLength = data.length;
-      res.send({data, interestLength});
+      res.send({ data, interestLength });
     })
     .catch(function FbApiError(err) {
       console.error(err);

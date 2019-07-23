@@ -8,21 +8,10 @@ module.exports = function(sequelize, modelName) {
       primaryKey: true,
       autoIncrement: true
     },
-    username: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
-    },
-    organization: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-      // unique: 'Username',
-      // defaultValue: ''
-    },
     email: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: 'UserEmail'
+      unique: true
     },
     salt: {
       type: DataTypes.STRING(32),
