@@ -284,9 +284,7 @@ router.post('/auth', function authUser(req, res) {
           // issue JSON web token as response
           return jwt.signToken({
             id: user.id,
-            organization: user.organization,
             email: user.email,
-            // expiryDate: user.expiryDate,
             props: user.props
           });
         })
