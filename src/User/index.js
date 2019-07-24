@@ -67,8 +67,13 @@ router.post('/', function createUser(req, res) {
             });
         })
         .then(() => {
+          delete user.password, delete user.salt;
           res.send({
-            id: user.id
+            message: 'User created succesfully',
+            userData: {
+              ...user,
+              paymentStatus: false
+            }
           });
         })
         .catch(function createUserError(err) {
@@ -185,7 +190,7 @@ router.post(
     userModel
       .findOne({
         where: {
-          email: req.user.email
+          id: req.user.id //req.user.email
         }
       })
       .then(user => {
@@ -207,11 +212,12 @@ router.post(
               salt: salt.toString('base64'),
               password: hash.toString('base64')
             });
-            return user.save();
+            // return user.save();
+            return;
           });
       })
       .then(() => {
-        res.sendStatus(200);
+        res.send('User password update successfully');
       })
       .catch(err => {
         if (err.message === 'Invalid credentials') {
@@ -284,19 +290,21 @@ router.post('/auth', function authUser(req, res) {
         })
         .then(token => {
           res.cookie(config.tokenCookieName, token, config.cookieOptions);
-          // let userData = {};
-          // Object.assign(userData, user);
-          // delete userData.password;
-          // delete userData.salt;
           res.send({
-            token: token
-            // userData //delete password and salt
+            token: token,
+            userData: {
+              id: user.id,
+              email: user.email,
+              paymentStatus: user.paymentStatus,
+              props: user.props
+            },
+            message: 'User Authentication Successful'
           });
         });
     })
     .catch(err => {
       if (err.message === 'Invalid credentials') {
-        res.sendStatus(403);
+        res.status(403).send('Invalid credentials');
       } else {
         console.error('Error authenticating user: ', err);
         res.status(500).send(err);
@@ -307,7 +315,7 @@ router.post('/auth', function authUser(req, res) {
 // sign out
 router.all('/logout', function logoutUser(req, res) {
   res.clearCookie(config.tokenCookieName);
-  res.send('Logout Successfull');
+  res.send('Logout Successful');
   return; // this all changed
 });
 
