@@ -13,6 +13,10 @@ module.exports = function(sequelize, modelName) {
       allowNull: false,
       unique: true
     },
+    fullName: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
     salt: {
       type: DataTypes.STRING(32),
       allowNull: false

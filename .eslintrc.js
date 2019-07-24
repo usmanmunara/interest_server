@@ -25,8 +25,8 @@ module.exports = {
     'new-cap': 'off',
     'no-console': 'off',
     'require-jsdoc': 'off',
-    camelCase: { ignoreDestructuring: true },
-    ignoreDestructuring: true
+    camelCase: { ignoreDestructuring: true }
+    // ignoreDestructuring: true
   },
   plugins: ['eslint-plugin-html']
 };

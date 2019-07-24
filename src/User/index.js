@@ -49,9 +49,7 @@ router.post('/', function createUser(req, res) {
         email,
         salt: salt.toString('base64'),
         password: hash.toString('base64'),
-        props: {
-          displayName: fullName
-        }
+        fullName
       };
 
       userModel.sequelize
@@ -118,29 +116,24 @@ router.patch('/', jwt.verifyTokenMiddleware(true), function updateUser(
     res.sendStatus(400);
     return;
   }
-
-  // console.log(req.user);
-
   userModel
     .findByPk(req.user.id)
     .then(user => {
       if (!user) {
         throw new Error('User not found');
       }
-
       // update user; force update last modified date
       user.update({
-        props: fullName
-          ? {
-              displayName: fullName
-            }
-          : user.props,
-        email
+        fullName: fullName ? fullName : user.fullName,
+        email: email ? email : user.email
       });
       user.changed('updatedAt', true);
-      return user.save();
+      return { ...user.dataValues, email };
+      // return user.save();
     })
     .then(user => {
+      delete user.password;
+      delete user.salt;
       res.send({ ...user, message: 'User Updated' });
     })
     .catch(function updateUserError(err) {
@@ -285,13 +278,19 @@ router.post('/auth', function authUser(req, res) {
           return jwt.signToken({
             id: user.id,
             email: user.email,
+            paymentStatus: user.paymentStatus,
             props: user.props
           });
         })
         .then(token => {
           res.cookie(config.tokenCookieName, token, config.cookieOptions);
+          // let userData = {};
+          // Object.assign(userData, user);
+          // delete userData.password;
+          // delete userData.salt;
           res.send({
             token: token
+            // userData //delete password and salt
           });
         });
     })
