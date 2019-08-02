@@ -16,7 +16,7 @@ router.all('/confirmPayment', function confirmPayment(req, res) {
 
   userModel.findOne({where: {email: req.body.data.object.client_reference_id}}).then((user) => {
     if (user) {
-      userModel.update({
+      user.update({
         paymentStatus: true,
       });
       res.sendStatus(200);
