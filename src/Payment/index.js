@@ -4,6 +4,7 @@ const router = require('express').Router();
 
 const config = require('../config');
 const sequelize = require('../model');
+
 const userModel = sequelize.model(config.modelNames.userModel);
 
 router.all('/confirmPayment', function confirmPayment(req, res) {
@@ -13,7 +14,7 @@ router.all('/confirmPayment', function confirmPayment(req, res) {
     return;
   }
 
-  userModel.find({where: {email: req.body.data.object.client_reference_id}}).then((user) => {
+  userModel.findOne({where: {email: req.body.data.object.client_reference_id}}).then((user) => {
     if (user) {
       userModel.update({
         paymentStatus: true,
