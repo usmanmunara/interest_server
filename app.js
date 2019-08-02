@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const UserRoute = require('./src/User');
 const InterestRoute = require('./src/Interests');
+const PaymentRoute = require('./src/Payment');
+
 const DemoRoute = require('./src/Interests/demo');
 
 // const helmet = require('helmet');
@@ -13,7 +15,7 @@ const app = express();
 
 const corsOptions = {
   origin: true,
-  credentials: true
+  credentials: true,
 };
 
 // view engine setup
@@ -34,14 +36,16 @@ if (app.get('env') === 'development') {
 
 app.use(bodyParser.json());
 app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
+    bodyParser.urlencoded({
+      extended: true,
+    })
 );
 
 app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/interests', InterestRoute);
 app.use('/api/v1/interests', DemoRoute);
+app.use('/api/v1/payment', PaymentRoute);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -57,7 +61,7 @@ if (app.get('env') === 'development') {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
-      error: err
+      error: err,
     });
   });
 }
@@ -68,7 +72,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: {}
+    error: {},
   });
 });
 
