@@ -19,6 +19,9 @@ router.all('/confirmPayment', function confirmPayment(req, res) {
       userModel.update({
         paymentStatus: true,
       });
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(404);
     }
   });
 });
