@@ -8,6 +8,10 @@ const userModel = sequelize.model(config.modelNames.userModel);
 
 router.all('/confirmPayment', function confirmPayment(req, res) {
   console.log(req.body);
+  if (!req.body.data) {
+    res.sendStatus(401);
+    return;
+  }
 
   userModel.find({where: {email: req.body.data.object.client_reference_id}}).then((user) => {
     if (user) {
