@@ -22,7 +22,7 @@ const userModel = sequelize.model(config.modelNames.userModel);
 // register a user
 router.post('/', function createUser(req, res) {
   // console.log(req.body);
-  const { email, password, fullName } = req.body;
+  const {email, password, fullName} = req.body;
   // field completeness check
   if (!email || !password || !fullName) {
     res.status(400).send('Missing fields.');
@@ -32,8 +32,8 @@ router.post('/', function createUser(req, res) {
   // password verification
   if (password.length < 6) {
     res
-      .status(400)
-      .send('Password Length should be greater than or equal to 6');
+        .status(400)
+        .send('Password Length should be greater than or equal to 6');
     return;
   }
 
@@ -44,51 +44,51 @@ router.post('/', function createUser(req, res) {
   }
 
   hashPassword(password)
-    .then(({ hash, salt }) => {
-      const user = {
-        email,
-        salt: salt.toString('base64'),
-        password: hash.toString('base64'),
-        fullName
-      };
+      .then(({hash, salt}) => {
+        const user = {
+          email,
+          salt: salt.toString('base64'),
+          password: hash.toString('base64'),
+          fullName,
+        };
 
-      userModel.sequelize
-        .transaction(t => {
-          // create user in own database
-          return userModel
-            .create(user, {
-              transaction: t
+        userModel.sequelize
+            .transaction((t) => {
+              // create user in own database
+              return userModel
+                  .create(user, {
+                    transaction: t,
+                  })
+                  .then((newUser) => {
+                    user.id = newUser.id; // why add user.id to newUser.id?
+                    return jwt.signHashToken({
+                      id: user.id,
+                    });
+                  });
             })
-            .then(newUser => {
-              user.id = newUser.id; // why add user.id to newUser.id?
-              return jwt.signHashToken({
-                id: user.id
+            .then(() => {
+              delete user.password, delete user.salt;
+              res.send({
+                message: 'User created succesfully',
+                userData: {
+                  ...user,
+                  paymentStatus: false,
+                },
               });
+            })
+            .catch(function createUserError(err) {
+              console.error(err);
+              if (err instanceof Sequelize.UniqueConstraintError) {
+                res.status(409).send(err.errors[0].message);
+                return;
+              }
+              throw err;
             });
-        })
-        .then(() => {
-          delete user.password, delete user.salt;
-          res.send({
-            message: 'User created succesfully',
-            userData: {
-              ...user,
-              paymentStatus: false
-            }
-          });
-        })
-        .catch(function createUserError(err) {
-          console.error(err);
-          if (err instanceof Sequelize.UniqueConstraintError) {
-            res.status(409).send(err.errors[0].message);
-            return;
-          }
-          throw err;
-        });
-    })
-    .catch(err => {
-      console.error('Error creating user: ', err);
-      res.sendStatus(500);
-    });
+      })
+      .catch((err) => {
+        console.error('Error creating user: ', err);
+        res.sendStatus(500);
+      });
 });
 
 /**
@@ -111,10 +111,10 @@ router.post('/', function createUser(req, res) {
 
 // update current user
 router.patch('/', jwt.verifyTokenMiddleware(true), function updateUser(
-  req,
-  res
+    req,
+    res
 ) {
-  const { email, fullName } = req.body;
+  const {email, fullName} = req.body;
 
   // email format validation
   if (email && !validator.isEmail(email)) {
@@ -122,33 +122,33 @@ router.patch('/', jwt.verifyTokenMiddleware(true), function updateUser(
     return;
   }
   userModel
-    .findByPk(req.user.id)
-    .then(user => {
-      if (!user) {
-        throw new Error('User not found');
-      }
-      // update user; force update last modified date
-      user.update({
-        fullName: fullName ? fullName : user.fullName,
-        email: email ? email : user.email
-      });
-      user.changed('updatedAt', true);
-      return { ...user.dataValues, email };
+      .findByPk(req.user.id)
+      .then((user) => {
+        if (!user) {
+          throw new Error('User not found');
+        }
+        // update user; force update last modified date
+        user.update({
+          fullName: fullName ? fullName : user.fullName,
+          email: email ? email : user.email,
+        });
+        user.changed('updatedAt', true);
+        return {...user.dataValues, email};
       // return user.save();
-    })
-    .then(user => {
-      delete user.password;
-      delete user.salt;
-      res.send({ ...user, message: 'User Updated' });
-    })
-    .catch(function updateUserError(err) {
-      if (err.message === 'User not found') {
-        res.sendStatus(404);
-        return;
-      }
-      console.error('Error updating user: ', err);
-      res.sendStatus(500);
-    });
+      })
+      .then((user) => {
+        delete user.password;
+        delete user.salt;
+        res.send({...user, message: 'User Updated'});
+      })
+      .catch(function updateUserError(err) {
+        if (err.message === 'User not found') {
+          res.sendStatus(404);
+          return;
+        }
+        console.error('Error updating user: ', err);
+        res.sendStatus(500);
+      });
 });
 
 /**
@@ -170,64 +170,64 @@ router.patch('/', jwt.verifyTokenMiddleware(true), function updateUser(
 
 // change password
 router.post(
-  '/password',
-  jwt.verifyTokenMiddleware(true),
-  function changePassword(req, res) {
+    '/password',
+    jwt.verifyTokenMiddleware(true),
+    function changePassword(req, res) {
     // console.log(req.user);
-    const { oldPassword, newPassword } = req.body;
-    // field completeness check
-    if (!oldPassword || !newPassword) {
-      res.sendStatus(400);
-      return;
-    }
+      const {oldPassword, newPassword} = req.body;
+      // field completeness check
+      if (!oldPassword || !newPassword) {
+        res.sendStatus(400);
+        return;
+      }
 
-    // password verification
-    if (newPassword.length < 6) {
-      res.sendStatus(400);
-      return;
-    }
+      // password verification
+      if (newPassword.length < 6) {
+        res.sendStatus(400);
+        return;
+      }
 
-    userModel
-      .findOne({
-        where: {
-          id: req.user.id //req.user.email
-        }
-      })
-      .then(user => {
-        if (!user) {
-          throw new Error('Invalid credentials');
-        }
-
-        // hash old password and verify
-        return hashPassword(oldPassword, Buffer.from(user.salt, 'base64'))
-          .then(({ hash }) => {
-            if (hash.toString('base64') !== user.password) {
-              // the password in user.passsword is hashed right?
+      userModel
+          .findOne({
+            where: {
+              id: req.user.id, // req.user.email
+            },
+          })
+          .then((user) => {
+            if (!user) {
               throw new Error('Invalid credentials');
             }
-            return hashPassword(req.body.newPassword);
+
+            // hash old password and verify
+            return hashPassword(oldPassword, Buffer.from(user.salt, 'base64'))
+                .then(({hash}) => {
+                  if (hash.toString('base64') !== user.password) {
+                    // the password in user.passsword is hashed right?
+                    throw new Error('Invalid credentials');
+                  }
+                  return hashPassword(req.body.newPassword);
+                })
+                .then(({hash, salt}) => {
+                  user.update({
+                    salt: salt.toString('base64'),
+                    password: hash.toString('base64'),
+                  });
+                  // return user.save();
+                  return;
+                });
           })
-          .then(({ hash, salt }) => {
-            user.update({
-              salt: salt.toString('base64'),
-              password: hash.toString('base64')
-            });
-            // return user.save();
-            return;
+          .then(() => {
+            res.send('User password update successfully');
+          })
+          .catch((err) => {
+            if (err.message === 'Invalid credentials') {
+              res.sendStatus(403);
+            } else {
+              console.error('Error authenticating user: ', err);
+              res.sendStatus(500);
+            }
           });
-      })
-      .then(() => {
-        res.send('User password update successfully');
-      })
-      .catch(err => {
-        if (err.message === 'Invalid credentials') {
-          res.sendStatus(403);
-        } else {
-          console.error('Error authenticating user: ', err);
-          res.sendStatus(500);
-        }
-      });
-  }
+    }
 );
 
 /**
@@ -254,7 +254,7 @@ router.post(
 
 // authenticate user
 router.post('/auth', function authUser(req, res) {
-  const { email, password } = req.body;
+  const {email, password} = req.body;
 
   // field completeness check
   if (!email || !password) {
@@ -263,53 +263,53 @@ router.post('/auth', function authUser(req, res) {
   }
 
   userModel
-    .findOne({
-      where: {
-        email: email
-      }
-    })
-    .then(user => {
-      if (!user) {
-        throw new Error('Invalid credentials');
-      }
+      .findOne({
+        where: {
+          email: email,
+        },
+      })
+      .then((user) => {
+        if (!user) {
+          throw new Error('Invalid credentials');
+        }
 
-      // hash password and verify
-      return hashPassword(password, Buffer.from(user.salt, 'base64'))
-        .then(({ hash }) => {
-          if (hash.toString('base64') !== user.password) {
-            throw new Error('Invalid credentials');
-          }
+        // hash password and verify
+        return hashPassword(password, Buffer.from(user.salt, 'base64'))
+            .then(({hash}) => {
+              if (hash.toString('base64') !== user.password) {
+                throw new Error('Invalid credentials');
+              }
 
-          // issue JSON web token as response
-          return jwt.signToken({
-            id: user.id,
-            email: user.email,
-            paymentStatus: user.paymentStatus,
-            props: user.props
-          });
-        })
-        .then(token => {
-          res.cookie(config.tokenCookieName, token, config.cookieOptions);
-          res.send({
-            token: token,
-            userData: {
-              id: user.id,
-              email: user.email,
-              paymentStatus: user.paymentStatus,
-              props: user.props
-            },
-            message: 'User Authentication Successful'
-          });
-        });
-    })
-    .catch(err => {
-      if (err.message === 'Invalid credentials') {
-        res.status(403).send('Invalid credentials');
-      } else {
-        console.error('Error authenticating user: ', err);
-        res.status(500).send(err);
-      }
-    });
+              // issue JSON web token as response
+              return jwt.signToken({
+                id: user.id,
+                email: user.email,
+                paymentStatus: user.paymentStatus,
+                props: user.props,
+              });
+            })
+            .then((token) => {
+              res.cookie(config.tokenCookieName, token, config.cookieOptions);
+              res.send({
+                token: token,
+                userData: {
+                  id: user.id,
+                  email: user.email,
+                  paymentStatus: user.paymentStatus,
+                  props: user.props,
+                },
+                message: 'User Authentication Successful',
+              });
+            });
+      })
+      .catch((err) => {
+        if (err.message === 'Invalid credentials') {
+          res.status(403).send('Invalid credentials');
+        } else {
+          console.error('Error authenticating user: ', err);
+          res.status(500).send(err);
+        }
+      });
 });
 
 // sign out

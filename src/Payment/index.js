@@ -3,6 +3,8 @@ const router = require('express').Router();
 
 
 const config = require('../config');
+const jwt = require('../Token');
+
 const sequelize = require('../model');
 
 const userModel = sequelize.model(config.modelNames.userModel);
@@ -40,4 +42,16 @@ router.post(
       });
     }
 );
+
+router.get('/paymentStatus',
+    jwt.verifyTokenMiddleware(true),
+    function confirmPayment(req, res) {
+      userModel.findOne({where: {id: req.user.id}}).then((user) => {
+        if (user) {
+          res.send(user);
+        } else {
+          res.sendStatus(404);
+        }
+      });
+    });
 module.exports = router;
