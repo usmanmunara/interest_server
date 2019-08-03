@@ -48,6 +48,8 @@ router.get('/paymentStatus',
     function confirmPayment(req, res) {
       userModel.findOne({where: {id: req.user.id}}).then((user) => {
         if (user) {
+          delete user.password;
+          delete user.salt;
           res.send(user);
         } else {
           res.sendStatus(404);
