@@ -82,3 +82,5 @@ Send the token as `Bearer token`.
 ## 'interests/demo' GET --> FOR DEMO ONLY
 
 add query as a query param with key search so the bacledn can retrieve it as req.query.search. Unprotected api for now.
+
+## RESPONSE

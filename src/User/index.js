@@ -338,6 +338,7 @@ router.post('/verifyEmail', function authUser(req, res) {
         if (!user) {
           throw new Error('Invalid user id');
         }
+        user.update({emailVerified: true});
         res.send({
           message: 'User Verified',
         });
