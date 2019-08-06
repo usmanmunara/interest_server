@@ -12,6 +12,10 @@ const sequelize = require('../model');
 const Sequelize = require('sequelize');
 const userModel = sequelize.model(config.modelNames.userModel);
 
+const registrationEmail = require('../Email/index');
+const verificationEmail = require('../Email/verifyEmail.js');
+
+
 // {
 // organization: 'edvant',
 // email: 'usman@edvant.net',
@@ -21,7 +25,6 @@ const userModel = sequelize.model(config.modelNames.userModel);
 // }
 // register a user
 router.post('/', function createUser(req, res) {
-  // console.log(req.body);
   const {email, password, fullName} = req.body;
   // field completeness check
   if (!email || !password || !fullName) {
@@ -70,11 +73,13 @@ router.post('/', function createUser(req, res) {
               delete user.password, delete user.salt;
               res.send({
                 message: 'User created succesfully',
-                userData: {
-                  ...user,
-                  paymentStatus: false,
-                },
+                // userData: {
+                //   ...user,
+                //   paymentStatus: false,
+                // },
               });
+              // registrationEmail(user.email);
+              verificationEmail(user.email, `https://fbpanda.lswong.com/verify/${user.id}`);
             })
             .catch(function createUserError(err) {
               console.error(err);
@@ -273,6 +278,10 @@ router.post('/auth', function authUser(req, res) {
           throw new Error('Invalid credentials');
         }
 
+        if (!user.emailVerified) {
+          res.status(403).send({message: 'User email not verified'});
+        }
+
         // hash password and verify
         return hashPassword(password, Buffer.from(user.salt, 'base64'))
             .then(({hash}) => {
@@ -307,6 +316,37 @@ router.post('/auth', function authUser(req, res) {
           res.status(403).send('Invalid credentials');
         } else {
           console.error('Error authenticating user: ', err);
+          res.status(500).send(err);
+        }
+      });
+});
+
+// verifyUser
+
+router.post('/verifyEmail', function authUser(req, res) {
+  const {id} = req.body;
+
+  // field completeness check
+  if (!id) {
+    res.status(400).send('User ID not found.');
+    return;
+  }
+
+  userModel
+      .findByPk(id)
+      .then((user) => {
+        if (!user) {
+          throw new Error('Invalid user id');
+        }
+        res.send({
+          message: 'User Verified',
+        });
+        registrationEmail(user.email);
+      }).catch((err) => {
+        if (err.message === 'Invalid credentials') {
+          res.status(403).send('Invalid credentials');
+        } else {
+          console.error('Error verifying user email: ', err);
           res.status(500).send(err);
         }
       });

@@ -2,8 +2,7 @@
 // https://github.com/sendgrid/sendgrid-nodejs
 const sgMail = require('@sendgrid/mail');
 
-export function registrationEmail(email) {
-  console.log('me work');
+function registrationEmail(email) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
     to: email,
@@ -167,7 +166,7 @@ export function registrationEmail(email) {
               </td>
             </tr>
           </table>
-        <table border="0" cellPadding="0" cellSpacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed" width="100%"><tbody><tr><td align="center" bgcolor="" class="outer-td" style="padding:0px 0px 0px 0px"><table border="0" cellPadding="0" cellSpacing="0" class="button-css__deep-table___2OZyb wrapper-mobile" style="text-align:center"><tbody><tr><td align="center" bgcolor="#335eea" class="inner-td" style="border-radius:6px;font-size:16px;text-align:center;background-color:inherit"><a href="support.fbpanda@gmail.com" style="background-color:#335eea;border:1px solid #333333;border-color:#335eea;border-radius:6px;border-width:1px;color:#ffffff;display:inline-block;font-family:arial,helvetica,sans-serif;font-size:16px;font-weight:normal;letter-spacing:0px;line-height:16px;padding:12px 18px 12px 18px;text-align:center;text-decoration:none" target="_blank">Contact Us</a></td></tr></tbody></table></td></tr></tbody></table>
+        <table border="0" cellPadding="0" cellSpacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed" width="100%"><tbody><tr><td align="center" bgcolor="" class="outer-td" style="padding:0px 0px 0px 0px"><table border="0" cellPadding="0" cellSpacing="0" class="button-css__deep-table___2OZyb wrapper-mobile" style="text-align:center"><tbody><tr><td align="center" bgcolor="#335eea" class="inner-td" style="border-radius:6px;font-size:16px;text-align:center;background-color:inherit"><a href="mailto:support.fbpanda@gmail.com" style="background-color:#335eea;border:1px solid #333333;border-color:#335eea;border-radius:6px;border-width:1px;color:#ffffff;display:inline-block;font-family:arial,helvetica,sans-serif;font-size:16px;font-weight:normal;letter-spacing:0px;line-height:16px;padding:12px 18px 12px 18px;text-align:center;text-decoration:none">Contact Us</a></td></tr></tbody></table></td></tr></tbody></table>
                                     </td>
                                   </tr>
                                 </table>
@@ -187,7 +186,9 @@ export function registrationEmail(email) {
             </div>
           </center>
         </body>
-      </html>`
+      </html>`,
   };
   sgMail.send(msg);
 }
+
+module.exports = registrationEmail;

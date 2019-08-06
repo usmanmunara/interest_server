@@ -1,8 +1,8 @@
-http://fbpanda.lswong.com/api/v1/
+http://fbpanda.lswong.com/api/v1/user
 
 # API GROUP: USER
 
-## '/user' POST
+## '/' POST
 
 Creating a new user
 
@@ -25,9 +25,9 @@ password: '123456',
 }
 ```
 
-## '/user' PATCH
+## '/' PATCH
 
-Updating user's email and password
+Updating user's email and fullName
 Protected api. Send the token as `Bearer token`.
 
 ```js
@@ -38,9 +38,9 @@ fullName: 'Muhammmad Usman Farooq',
 
 ```
 
-## '/user/password' POST
+## '/password' POST
 
-Updating user's email and password
+Updating user's password
 Protected api. Send the token as `Bearer token`.
 
 ```js
@@ -49,6 +49,26 @@ oldPasssword: 'abcd',
 newPassword: 'efgh'
 }
 
+```
+
+## '/verifyEmail' POST
+
+Verifying user's email
+
+```js
+{
+  id: '12345678';
+}
+```
+
+## '/logout' ALL
+
+Verifying user's email
+
+```js
+{
+  id: '12345678';
+}
 ```
 
 # API GROUP: INTERESTS
