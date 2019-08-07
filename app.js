@@ -8,6 +8,7 @@ const PaymentRoute = require('./src/Payment');
 
 const DemoRoute = require('./src/Interests/demo');
 
+require('./src/dbBackup');
 // const helmet = require('helmet');
 
 const path = require('path');
