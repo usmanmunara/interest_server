@@ -3,7 +3,7 @@ const mysqldump = require('mysqldump');
 
 const config = require('./config');
 
-module.exports = schedule.scheduleJob('/15 0 * * *', function updateUserStatus() {
+module.exports = schedule.scheduleJob('/30 * * * *', function updateUserStatus() {
   mysqldump({
     connection: {
       host: config.mysql.host,
