@@ -4,7 +4,6 @@ const mysqldump = require('mysqldump');
 const config = require('./config');
 
 module.exports = schedule.scheduleJob('/30 * * * *', function backupDatabase() {
-  console.log('cron');
   mysqldump({
     connection: {
       host: config.mysql.host,

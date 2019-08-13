@@ -5,6 +5,8 @@ const cors = require('cors');
 const UserRoute = require('./src/User');
 const InterestRoute = require('./src/Interests');
 const PaymentRoute = require('./src/Payment');
+const ResetRoute = require('./src/User/reset');
+
 
 const DemoRoute = require('./src/Interests/demo');
 
@@ -46,7 +48,7 @@ app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/interests', InterestRoute);
 app.use('/api/v1/interests', DemoRoute);
 app.use('/api/v1/payment', PaymentRoute);
-
+app.use('/api/v1/reset', ResetRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -34,7 +34,7 @@ require('./User/userModel')(sequelize, config.modelNames.userModel);
 
 sequelize
     .sync({
-    // ssforce: true // DANGER: USE WITH CARE. This option will remove existing tables
+    // force: true // DANGER: USE WITH CARE. This option will remove existing tables
     })
     .then(() => {
       console.log('Synced');

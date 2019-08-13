@@ -360,4 +360,74 @@ router.all('/logout', function logoutUser(req, res) {
   return; // this all changed
 });
 
+
+// reset password
+
+/**
+ * @api {post} /user/password Change password of logged in user
+ * @apiName ChangePassword
+ * @apiDescription Change password
+ * @apiGroup User
+ *
+ * @apiExample Example request body (only these fields can be updated here)
+{
+  "oldPassword": "passw0rd",
+  "newPassword": "passw1rd"
+}
+ *
+ * @apiError (errorGroup) 400 Bad Request: Old or new passwords are not sent.
+ * @apiError (errorGroup) 403 Forbidden: User is not logged in.
+ * @apiError (errorGroup) 500 Internal Server Error: operation failed due to server error.
+ */
+
+// change password
+router.post(
+    '/resetPassword',
+    function changePassword(req, res) {
+      const {password, confirmPassword, id} = req.body;
+      // field completeness check
+      if (!password || !confirmPassword || !id) {
+        res.sendStatus(400);
+        return;
+      }
+
+      // password verification
+      if (password.length < 6 || password !== confirmPassword) {
+        res.sendStatus(400);
+        return;
+      }
+      userModel
+          .findOne({
+            where: {
+              id: req.body.id, // req.user.email
+            },
+          })
+          .then((user) => {
+            if (!user) {
+              throw new Error('Invalid credentials');
+            }
+            // hash old password and verify
+            hashPassword(password)
+                .then(({hash, salt}) => {
+                  user.update({
+                    salt: salt.toString('base64'),
+                    password: hash.toString('base64'),
+                  });
+                  return;
+                });
+          })
+          .then(() => {
+            res.send('User password update successfully');
+          })
+          .catch((err) => {
+            if (err.message === 'Invalid credentials') {
+              res.sendStatus(403);
+            } else {
+              console.error('Error authenticating user: ', err);
+              res.sendStatus(500);
+            }
+          });
+    }
+);
+
 module.exports = router;
