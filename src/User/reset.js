@@ -10,7 +10,7 @@ const resetEmail = require('../Email/forgetPassword');
 
 
 // reset password email
-router.post('/reset', function resetPasswordRequest(req, res) {
+router.post('/', function resetPasswordRequest(req, res) {
   // field completeness check
   if (!req.body.email || !validator.isEmail(req.body.email)) {
     res.sendStatus(400);
