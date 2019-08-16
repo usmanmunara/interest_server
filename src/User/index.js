@@ -79,7 +79,7 @@ router.post('/', function createUser(req, res) {
                 // },
               });
               // registrationEmail(user.email);
-              verificationEmail(user.email, `https://fbpanda.lswong.com/verify?id=${user.id}`);
+              verificationEmail(user.email, `${process.env.EXTERNAL_DOMAIN}/verify?id=${user.id}`);
             })
             .catch(function createUserError(err) {
               console.error(err);

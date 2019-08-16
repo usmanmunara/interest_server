@@ -6,7 +6,7 @@ function registrationEmail(email) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
     to: email,
-    from: 'support@fbpanda.com',
+    from: 'support@interestpanda.com',
     subject: 'Registration Successful',
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
       <html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">
@@ -151,13 +151,13 @@ function registrationEmail(email) {
 
       <div>&nbsp;</div>
 
-      <div>Thank you so much for registering with Fbanda. We hope you&#39;ll enjoy using our specifically curated Facebook Marketing tools. Do let us know if you have any feedback or any issues by contacting us at support@fbpanda.com.</div>
+      <div>Thank you so much for registering with Fbanda. We hope you&#39;ll enjoy using our specifically curated Facebook Marketing tools. Do let us know if you have any feedback or any issues by contacting us at support@interestpanda.com.</div>
 
       <div>&nbsp;</div>
 
       <div>Thank you,</div>
 
-      <div>Team FBPanda</div>
+      <div>Team InterestPanda</div>
 
       <div>&nbsp;</div>
 
@@ -166,7 +166,7 @@ function registrationEmail(email) {
               </td>
             </tr>
           </table>
-        <table border="0" cellPadding="0" cellSpacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed" width="100%"><tbody><tr><td align="center" bgcolor="" class="outer-td" style="padding:0px 0px 0px 0px"><table border="0" cellPadding="0" cellSpacing="0" class="button-css__deep-table___2OZyb wrapper-mobile" style="text-align:center"><tbody><tr><td align="center" bgcolor="#335eea" class="inner-td" style="border-radius:6px;font-size:16px;text-align:center;background-color:inherit"><a href="mailto:support.fbpanda@gmail.com" style="background-color:#335eea;border:1px solid #333333;border-color:#335eea;border-radius:6px;border-width:1px;color:#ffffff;display:inline-block;font-family:arial,helvetica,sans-serif;font-size:16px;font-weight:normal;letter-spacing:0px;line-height:16px;padding:12px 18px 12px 18px;text-align:center;text-decoration:none">Contact Us</a></td></tr></tbody></table></td></tr></tbody></table>
+        <table border="0" cellPadding="0" cellSpacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed" width="100%"><tbody><tr><td align="center" bgcolor="" class="outer-td" style="padding:0px 0px 0px 0px"><table border="0" cellPadding="0" cellSpacing="0" class="button-css__deep-table___2OZyb wrapper-mobile" style="text-align:center"><tbody><tr><td align="center" bgcolor="#335eea" class="inner-td" style="border-radius:6px;font-size:16px;text-align:center;background-color:inherit"><a href="mailto:support.interestpanda@gmail.com" style="background-color:#335eea;border:1px solid #333333;border-color:#335eea;border-radius:6px;border-width:1px;color:#ffffff;display:inline-block;font-family:arial,helvetica,sans-serif;font-size:16px;font-weight:normal;letter-spacing:0px;line-height:16px;padding:12px 18px 12px 18px;text-align:center;text-decoration:none">Contact Us</a></td></tr></tbody></table></td></tr></tbody></table>
                                     </td>
                                   </tr>
                                 </table>

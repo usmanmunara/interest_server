@@ -1,4 +1,4 @@
-http://fbpanda.lswong.com/api/v1/user
+https://interestpanda.com/api/v1/user
 
 # API GROUP: USER
 
@@ -8,7 +8,7 @@ Creating a new user
 
 ```js
 {
-email: 'usman@fbpanda.com',
+email: 'usman@interestpanda.com',
 password: '123456',
 fullName: 'Muhammmad Usman Farooq',
 }
@@ -32,7 +32,7 @@ Protected api. Send the token as `Bearer token`.
 
 ```js
 {
-email: 'usman@fbpanda.com',
+email: 'usman@interestpanda.com',
 fullName: 'Muhammmad Usman Farooq',
 }
 

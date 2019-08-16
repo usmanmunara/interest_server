@@ -4,7 +4,7 @@ function verificationEmail(email, verificationURL) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
     to: email,
-    from: 'support@fbpanda.com',
+    from: 'support@interestpanda.com',
     subject: 'Registration Successful',
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">
@@ -163,7 +163,7 @@ function verificationEmail(email, verificationURL) {
                 <p style="font-family: &quot;Open Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; color: rgb(51, 51, 51); max-width: 600px; margin-top: 10px; margin-bottom: 10px; padding-bottom: 15px;">Or visit this link:</p> <a href="${verificationURL}">${verificationURL}<a/>
 
     <p style="font-family: &quot;Open Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; color: rgb(51, 51, 51); margin-top: 10px; margin-bottom: 10px;">Thank you,<br>
-    FBPanda Team</p>
+    InterestPanda Team</p>
             </td>
           </tr>
         </table>
