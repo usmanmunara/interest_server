@@ -25,9 +25,7 @@ router.post('/', function resetPasswordRequest(req, res) {
     if (!user) {
       throw new Error('User not found');
     }
-    resetEmail(user.email, `${process.env.EXTERNAL_DOMAIN}/reset?id=${user.id}`).catch((err) => {
-      console.error('Error sending password reset email: ', err);
-    });
+    resetEmail(user.email, `${process.env.EXTERNAL_DOMAIN}/reset?id=${user.id}`);
     res.sendStatus(202);
   }).catch((err) => {
     if (err.message === 'User not found') {
