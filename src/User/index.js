@@ -28,7 +28,7 @@ router.post('/', function createUser(req, res) {
   const {email, password, fullName} = req.body;
   // field completeness check
   if (!email || !password || !fullName) {
-    res.status(400).send('Missing fields.');
+    res.status(400).send({message: 'Missing fields'});
     return;
   }
 
@@ -36,13 +36,13 @@ router.post('/', function createUser(req, res) {
   if (password.length < 6) {
     res
         .status(400)
-        .send('Password Length should be greater than or equal to 6');
+        .send({message: 'Password Length should be greater than or equal to 6'});
     return;
   }
 
   // email format and domain verification
   if (!validator.isEmail(email)) {
-    res.status(400).send('invalid email');
+    res.status(400).send({message: 'invalid email'});
     return;
   }
 
@@ -123,7 +123,7 @@ router.patch('/', jwt.verifyTokenMiddleware(true), function updateUser(
 
   // email format validation
   if (email && !validator.isEmail(email)) {
-    res.sendStatus(400);
+    res.status(400).send({message: 'Invalid email'});
     return;
   }
   userModel
@@ -328,7 +328,7 @@ router.post('/verifyEmail', function authUser(req, res) {
 
   // field completeness check
   if (!id) {
-    res.status(400).send('User ID not found.');
+    res.status(400).send({message: 'User ID not found.'});
     return;
   }
 

@@ -13,36 +13,36 @@ router.get('/demo', function getInerests(req, res) {
 
   let demoData = [];
   const getFirstApi = new Promise(function(resolve, reject) {
-    axios.get(AD_INTEREST_URL).then(res => resolve(res.data));
+    axios.get(AD_INTEREST_URL).then((res) => resolve(res.data));
   });
   const getSecondApi = new Promise(function(resolve, reject) {
-    axios.get(AD_INTEREST_SUGGESTION_URL).then(res => resolve(res.data));
+    axios.get(AD_INTEREST_SUGGESTION_URL).then((res) => resolve(res.data));
   });
   Promise.all([getFirstApi, getSecondApi])
-    .then(res => {
-      let resData = [...res[0].data, ...res[1].data];
-      const interestLength = resData.length;
-      let data = resData.slice(0, 10);
-      demoData = data.map(({ audience_size, id, name, topic }, unique_id) => {
-        return {
-          unique_id,
-          audience_size,
-          id,
-          name,
-          topic,
-          selected: false,
-          fbLink: `https://www.facebook.com/search/top/?q=${query}`,
-          googleLink: `https://www.google.com/search?q=${query}`
-        };
+      .then((res) => {
+        const resData = [...res[0].data, ...res[1].data];
+        const interestLength = resData.length;
+        const data = resData.slice(0, 10);
+        demoData = data.map(({audience_size, id, name, topic}, unique_id) => {
+          return {
+            unique_id,
+            audience_size,
+            id,
+            name,
+            topic,
+            selected: false,
+            fbLink: `https://www.facebook.com/search/top/?q=${query}`,
+            googleLink: `https://www.google.com/search?q=${query}`,
+          };
+        });
+        return {demoData, interestLength};
+      })
+      .then((data) => {
+        res.send(data);
+      })
+      .catch(function FbApiError(err) {
+        console.error(err);
+        res.sendStatus(404);
       });
-      return { demoData, interestLength };
-    })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(function FbApiError(err) {
-      console.error(err);
-      res.sendStatus(404);
-    });
 });
 module.exports = router;

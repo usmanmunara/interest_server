@@ -8,12 +8,12 @@ const sequelize = require('../model');
 const userModel = sequelize.model(config.modelNames.userModel);
 
 router.get('/user', jwt.verifyTokenMiddleware(true), function getInerests(
-  req,
-  res
+    req,
+    res
 ) {
-  userModel.findByPk(req.user.id).then(user => {
+  userModel.findByPk(req.user.id).then((user) => {
     if (!user.paymentStatus) {
-      res.status(401).send('Unpaid user');
+      res.status(400).send({message: 'Unpaid user'});
       return;
     }
     // });
@@ -26,37 +26,37 @@ router.get('/user', jwt.verifyTokenMiddleware(true), function getInerests(
 
     let DATA = [];
     const getFirstApi = new Promise(function(resolve, reject) {
-      axios.get(AD_INTEREST_URL).then(res => resolve(res.data));
+      axios.get(AD_INTEREST_URL).then((res) => resolve(res.data));
     });
     const getSecondApi = new Promise(function(resolve, reject) {
-      axios.get(AD_INTEREST_SUGGESTION_URL).then(res => resolve(res.data));
+      axios.get(AD_INTEREST_SUGGESTION_URL).then((res) => resolve(res.data));
     });
     Promise.all([getFirstApi, getSecondApi])
-      .then(res => {
-        let data = [...res[0].data, ...res[1].data];
-        return (DATA = data.map(
-          ({ audience_size, id, name, topic }, unique_id) => {
-            return {
-              unique_id,
-              audience_size,
-              id,
-              name,
-              topic,
-              selected: false,
-              fbLink: `https://www.facebook.com/search/top/?q=${query}`,
-              googleLink: `https://www.google.com/search?q=${query}`
-            };
-          }
-        ));
-      })
-      .then(data => {
-        const interestLength = data.length;
-        res.send({ data, interestLength });
-      })
-      .catch(function FbApiError(err) {
-        console.error(err);
-        res.sendStatus(404);
-      });
+        .then((res) => {
+          const data = [...res[0].data, ...res[1].data];
+          return (DATA = data.map(
+              ({audience_size, id, name, topic}, unique_id) => {
+                return {
+                  unique_id,
+                  audience_size,
+                  id,
+                  name,
+                  topic,
+                  selected: false,
+                  fbLink: `https://www.facebook.com/search/top/?q=${query}`,
+                  googleLink: `https://www.google.com/search?q=${query}`,
+                };
+              }
+          ));
+        })
+        .then((data) => {
+          const interestLength = data.length;
+          res.send({data, interestLength});
+        })
+        .catch(function FbApiError(err) {
+          console.error(err);
+          res.sendStatus(404);
+        });
   });
 });
 module.exports = router;
