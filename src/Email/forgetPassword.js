@@ -4,7 +4,7 @@ function resetEmail(email, resetURL) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
     to: email,
-    from: 'support@interestpanda.com',
+    from: 'interestpanda@gmail.com',
     subject: 'Reset Password',
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">
