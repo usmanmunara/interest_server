@@ -29,7 +29,7 @@ router.get('/', function getTrends(req, res) {
 });
 
 router.get('/', function getTrends(req, res) {
-  googleTrends.interestOverTime({keyword: req.body.keyword, startTime: new Date('January 01, 2019 00:00:00')})
+  googleTrends.interestOverTime({keyword: req.params.keyword, startTime: new Date('January 01, 2019 00:00:00')})
       .then(function(results) {
         // console.log('These results are awesome', results);
         const resultDATA = JSON.parse(results);
@@ -52,7 +52,7 @@ router.get('/', function getTrends(req, res) {
 });
 
 router.get('/related', function getTrends(req, res) {
-  googleTrends.relatedQueries({keyword: req.body.keyword})
+  googleTrends.relatedQueries({keyword: req.params.keyword})
       .then(function(results) {
         // console.log('These results are awesome', results);
         const resultDATA = JSON.parse(results);
@@ -78,7 +78,7 @@ router.get('/related', function getTrends(req, res) {
 router.get('/relatedMuse', function getTrends(req, res) {
   axios.get('https://api.datamuse.com/words', {
     params: {
-      ml: req.body.keyword,
+      ml: req.params.keyword,
     },
   }).then((result) => {
     res.send(result.data);
