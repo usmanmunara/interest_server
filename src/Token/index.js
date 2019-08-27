@@ -15,7 +15,7 @@ const hashKey = config.tokenKeys.hmacKey;
 
 const signingOptions = {
   algorithm: 'RS256',
-  expiresIn: '7 days',
+  expiresIn: '30 days',
   issuer: process.env.EXTERNAL_DOMAIN,
 };
 
@@ -26,7 +26,7 @@ const verifyOptions = {
 
 const hashOptions = {
   algorithm: 'HS256',
-  expiresIn: '7 days',
+  expiresIn: '30 days',
   issuer: process.env.EXTERNAL_DOMAIN,
 };
 
