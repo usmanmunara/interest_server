@@ -20,6 +20,7 @@
     "google-trends-api": "^4.9.0",
     "googleapis": "^39.2.0",
     "helmet": "^3.16.0",
+    "https-proxy-agent": "^2.2.2",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "morgan": "^1.7.0",

@@ -5,8 +5,12 @@ const axios = require('axios');
 
 // const jwt = require('../Token');
 
+const HttpsProxyAgent = require('https-proxy-agent');
+
+const proxyAgent = new HttpsProxyAgent('http://localhost:8080/');
+
 router.get('/', function getTrends(req, res) {
-  googleTrends.interestOverTime({keyword: req.query.keyword, startTime: new Date('January 01, 2019 00:00:00')})
+  googleTrends.interestOverTime({keyword: req.query.keyword, startTime: new Date('January 01, 2019 00:00:00'), proxyAgent})
       .then(function(results) {
         // console.log('These results are awesome', results);
         const resultDATA = JSON.parse(results);
@@ -29,7 +33,7 @@ router.get('/', function getTrends(req, res) {
 });
 
 router.get('/related', function getTrends(req, res) {
-  googleTrends.relatedQueries({keyword: req.query.keyword})
+  googleTrends.relatedQueries({keyword: req.query.keyword, proxyAgent})
       .then(function(results) {
         // console.log('These results are awesome', results);
         const resultDATA = JSON.parse(results);
